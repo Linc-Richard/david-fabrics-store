@@ -1,0 +1,646 @@
+/* ==========================================================================
+   DAVID FABRICS STORE — MOTION LAYER
+   Restrained, editorial motion. Transform / opacity / clip-path only.
+   All initial hidden states are gated behind the root .js class so the
+   site remains fully visible and usable without JavaScript.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. MOTION TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.45, 0, 0.15, 1);
+  --dur-fast: 250ms;
+  --dur-base: 600ms;
+  --dur-slow: 900ms;
+  --dur-cinematic: 1300ms;
+  --reveal-distance: 28px;
+  --stagger: 90ms;
+}
+
+/* --------------------------------------------------------------------------
+   2. PAGE ENTRANCE — warm-white veil, header drop, hero sequence
+   -------------------------------------------------------------------------- */
+.page-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--color-warm-white);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.js .page-veil {
+  visibility: visible;
+  animation: veilOut 700ms var(--ease-luxe) forwards;
+}
+
+@keyframes veilOut {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
+}
+
+.js .site-header {
+  animation: headerDrop 700ms var(--ease-luxe) 60ms backwards;
+}
+
+.js .site-header .brand-logo,
+.js .primary-nav {
+  animation: none;
+}
+
+@keyframes headerDrop {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* The hero media is a CSS-generated editorial texture, not an <img>.
+   The clip-path wipe lives on .hero-media; the slow settle lives on its
+   ::before layer so the two never fight over the transform property. */
+.hero-media {
+  top: -40px;
+  bottom: -40px;
+  background: var(--color-black);
+}
+
+.hero-media::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, rgba(17, 17, 17, 0.92) 20%, rgba(17, 17, 17, 0.28) 70%),
+    repeating-linear-gradient(135deg, #302b29 0, #302b29 12rem, #1b1918 12rem, #1b1918 24rem);
+  content: "";
+  transform: scale(1);
+}
+
+.hero-media span {
+  position: relative;
+  z-index: 1;
+}
+
+.js [data-motion-hero] .hero-media {
+  animation: heroMediaClip var(--dur-cinematic) var(--ease-luxe) 120ms backwards;
+}
+
+.js [data-motion-hero] .hero-media::before {
+  animation: heroImageSettle 1800ms var(--ease-luxe) 120ms backwards;
+}
+
+@keyframes heroMediaClip {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0); }
+}
+
+@keyframes heroImageSettle {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+.js [data-motion-hero] .hero-brand,
+.js [data-motion-hero] h1,
+.js [data-motion-hero] .hero-swahili,
+.js [data-motion-hero] .hero-copy,
+.js [data-motion-hero] .hero-actions {
+  opacity: 1;
+}
+
+.js [data-motion-hero] .hero-brand {
+  animation: heroRise 700ms var(--ease-luxe) 210ms backwards;
+}
+
+.js [data-motion-hero] h1 {
+  animation: heroTitleRise 920ms var(--ease-luxe) 300ms backwards;
+}
+
+.js [data-motion-hero] .hero-swahili {
+  animation: heroRise 700ms var(--ease-luxe) 610ms backwards;
+}
+
+.js [data-motion-hero] .hero-copy {
+  animation: heroRise 700ms var(--ease-luxe) 740ms backwards;
+}
+
+.js [data-motion-hero] .hero-actions {
+  animation: heroRise 650ms var(--ease-luxe) 870ms backwards;
+}
+
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Whole-heading curtain. The teaser text is never split into spans because
+   language.js swaps copy with textContent; the heading stays one readable,
+   translatable element. */
+@keyframes heroTitleRise {
+  from { opacity: 0; transform: translateY(22px); clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; transform: translateY(0); clip-path: inset(0); }
+}
+
+/* --------------------------------------------------------------------------
+   3. NAVIGATION
+   -------------------------------------------------------------------------- */
+.primary-nav a::after {
+  transition: transform 450ms var(--ease-luxe);
+}
+
+.primary-nav a.is-active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.nav-toggle span {
+  transition: transform 350ms var(--ease-soft);
+}
+
+/* --------------------------------------------------------------------------
+   4. SCROLL REVEALS
+   -------------------------------------------------------------------------- */
+.js [data-reveal="fade-up"] {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity var(--dur-slow) var(--ease-luxe),
+    transform var(--dur-slow) var(--ease-luxe);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal="fade-up"].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js [data-reveal="fade"] {
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-luxe);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal="fade"].is-revealed {
+  opacity: 1;
+}
+
+.js [data-reveal="rise"] {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path var(--dur-slow) var(--ease-luxe);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal="rise"].is-revealed {
+  clip-path: inset(0);
+}
+
+/* Image mask reveal: wrapper wipes up while the photograph settles. */
+.js [data-reveal="mask"] {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1100ms var(--ease-luxe);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal="mask"].is-revealed {
+  clip-path: inset(0);
+}
+
+.js [data-reveal="mask"] img {
+  transform: scale(1.12);
+  transition: transform 1400ms var(--ease-luxe);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal="mask"].is-revealed img {
+  transform: scale(1);
+}
+
+/* --------------------------------------------------------------------------
+   5. SECTION CONTINUITY — burgundy hairline draw
+   -------------------------------------------------------------------------- */
+.js .section[data-reveal="line"] {
+  position: relative;
+}
+
+.js .section[data-reveal="line"]::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--color-primary);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1000ms var(--ease-luxe);
+}
+
+.js .section[data-reveal="line"].is-revealed::before {
+  transform: scaleX(1);
+}
+
+.js .craft[data-reveal="line"]::before {
+  background: rgba(250, 249, 246, 0.42);
+}
+
+.js .contact[data-reveal="line"]::before {
+  background: rgba(250, 249, 246, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   6. IMAGE + GALLERY INTERACTIONS
+   -------------------------------------------------------------------------- */
+.intro-photo,
+.service-image,
+.gallery-item {
+  overflow: hidden;
+}
+
+.gallery-item {
+  position: relative;
+  transition: none;
+}
+
+/* The original build lifted cards with translate + shadow; the new layer
+   keeps the card still and lets the photograph do the moving. */
+.gallery-item:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.gallery-item::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.12);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 450ms var(--ease-luxe);
+}
+
+.gallery-item figcaption {
+  position: relative;
+  z-index: 2;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-item:hover::after {
+    opacity: 1;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.04);
+    transition-duration: 900ms;
+  }
+
+  .gallery-item:hover figcaption {
+    transform: translateY(-10px);
+  }
+
+  .service-card:hover .service-image img {
+    transform: scale(1.04);
+    transition-duration: 900ms;
+  }
+
+  .intro-photo:hover img,
+  .js [data-reveal="mask"].is-revealed:hover img {
+    transform: scale(1.04);
+    transition-duration: 900ms;
+  }
+}
+
+.gallery-item img {
+  transition: transform 900ms var(--ease-luxe);
+}
+
+.service-image img {
+  transition: transform 900ms var(--ease-luxe);
+}
+
+.gallery-item figcaption {
+  transition: transform 450ms var(--ease-luxe);
+}
+
+@media (hover: none) {
+  .gallery-item,
+  .gallery-item:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .gallery-item img,
+  .gallery-item:hover img,
+  .gallery-item figcaption,
+  .gallery-item:hover figcaption {
+    transform: none;
+  }
+
+  .gallery-item::after {
+    display: none;
+  }
+
+  .service-card:hover .service-image img {
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. BUTTONS
+   -------------------------------------------------------------------------- */
+.button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  --button-sweep: var(--color-primary);
+  transition: transform 120ms var(--ease-luxe);
+}
+
+.button::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--button-sweep);
+  content: "";
+  pointer-events: none;
+  transform: translateX(-101%);
+  transition: transform 500ms var(--ease-luxe);
+}
+
+.button:hover::before,
+.button:focus-visible::before {
+  transform: translateX(0);
+}
+
+.button:hover {
+  transform: none;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.button--light {
+  --button-sweep: var(--color-cream);
+}
+
+.button--hero-outline {
+  --button-sweep: var(--color-primary);
+}
+
+.button--contact-outline {
+  --button-sweep: var(--color-black);
+}
+
+/* WhatsApp keeps its existing colour behaviour; only press/focus are added. */
+.button--whatsapp {
+  --button-sweep: transparent;
+}
+
+.contact .button:focus-visible {
+  outline-color: currentColor;
+}
+
+.contact a:focus-visible,
+.site-footer a:focus-visible {
+  outline-color: var(--color-warm-white);
+}
+
+/* --------------------------------------------------------------------------
+   8. LANGUAGE SWITCHER POLISH
+   -------------------------------------------------------------------------- */
+.language-switcher button {
+  position: relative;
+}
+
+.language-switcher button::after {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.15rem;
+  left: 0.35rem;
+  height: 1px;
+  background: var(--color-primary);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms var(--ease-luxe);
+}
+
+.language-switcher button[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+
+/* Only visible translated blocks receive .lang-target from motion.js, so a
+   language change never reveals below-the-fold content early. */
+.js .lang-target,
+.js [data-reveal].lang-target {
+  opacity: 0;
+  transition:
+    opacity 180ms var(--ease-luxe),
+    transform 180ms var(--ease-luxe);
+  transition-delay: var(--lang-delay, 0ms);
+}
+
+.js .lang-target:is(p, h1, h2, h3, a.button, button) {
+  transform: translateY(6px);
+}
+
+.js.lang-in .lang-target {
+  opacity: 1;
+  transition-duration: 320ms;
+}
+
+.js.lang-in .lang-target:is(p, h1, h2, h3, a.button, button) {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   9. MOBILE MENU + MOBILE TUNING
+   -------------------------------------------------------------------------- */
+@media (max-width: 47.999rem) {
+  :root {
+    --reveal-distance: 16px;
+    --stagger: 70ms;
+    --dur-base: 480ms;
+    --dur-slow: 720ms;
+    --dur-cinematic: 1040ms;
+  }
+
+  .site-header {
+    z-index: 40;
+  }
+
+  .brand,
+  .nav-toggle {
+    position: relative;
+    z-index: 2;
+  }
+
+  .js .primary-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: calc(var(--header-height) + 2rem) 1.5rem 2rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--color-warm-white);
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      clip-path 350ms var(--ease-soft),
+      opacity 350ms var(--ease-soft),
+      visibility 0s linear 350ms;
+  }
+
+  .js .primary-nav.is-open {
+    clip-path: inset(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      clip-path 550ms var(--ease-soft),
+      opacity 550ms var(--ease-soft);
+  }
+
+  .primary-nav a {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    padding-block: 0.6rem;
+  }
+
+  .primary-nav a::after {
+    display: none;
+  }
+
+  .js .primary-nav a,
+  .js .primary-nav .language-switcher {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 450ms var(--ease-luxe),
+      transform 450ms var(--ease-luxe);
+  }
+
+  .js .primary-nav.is-open a,
+  .js .primary-nav.is-open .language-switcher {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .js .primary-nav.is-open a:nth-child(1) {
+    transition-delay: 200ms;
+  }
+
+  .js .primary-nav.is-open a:nth-child(2) {
+    transition-delay: 270ms;
+  }
+
+  .js .primary-nav.is-open a:nth-child(3) {
+    transition-delay: 340ms;
+  }
+
+  .js .primary-nav.is-open a:nth-child(4) {
+    transition-delay: 410ms;
+  }
+
+  .js .primary-nav.is-open .language-switcher {
+    transition-delay: 480ms;
+  }
+
+  .language-switcher button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .js [data-motion-hero] .hero-media {
+    animation-duration: var(--dur-cinematic);
+  }
+
+  .js [data-motion-hero] .hero-media::before {
+    animation-duration: 1400ms;
+  }
+
+  .js [data-reveal="mask"] {
+    transition-duration: 820ms;
+  }
+
+  .js [data-reveal="mask"] img {
+    transition-duration: 1000ms;
+  }
+
+  .js [data-reveal="rise"] {
+    transition-duration: var(--dur-slow);
+  }
+}
+
+html.menu-open,
+body.menu-open {
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   10. REDUCED MOTION — no movement, no loops, content instantly visible
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js .page-veil {
+    display: none;
+  }
+
+  .js .site-header,
+  .js [data-motion-hero] .hero-brand,
+  .js [data-motion-hero] h1,
+  .js [data-motion-hero] .hero-swahili,
+  .js [data-motion-hero] .hero-copy,
+  .js [data-motion-hero] .hero-actions,
+  .js [data-motion-hero] .hero-media,
+  .js [data-motion-hero] .hero-media::before {
+    animation: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .js [data-reveal],
+  .js [data-reveal].is-revealed,
+  .js [data-reveal] img {
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .js .section[data-reveal="line"]::before {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
+
+  .js .primary-nav a,
+  .js .primary-nav .language-switcher,
+  .js .lang-target {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .nav-toggle span,
+  .language-switcher button,
+  .language-switcher button::after,
+  .button,
+  .button::before {
+    transition: none !important;
+  }
+}

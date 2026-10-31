@@ -1,8 +1,8 @@
 /* ==========================================================================
    DAVID FABRICS STORE — MOTION LAYER
-   Restrained, editorial motion. Transform / opacity / clip-path only.
-   All initial hidden states are gated behind the root .js class so the
-   site remains fully visible and usable without JavaScript.
+   Quiet, cinematic motion. Transform / opacity / clip-path only.
+   All hidden states are gated behind the root .js class so the site is
+   fully visible without JavaScript.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -20,13 +20,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. PAGE ENTRANCE — warm-white veil, header drop, hero sequence
+   2. PAGE ENTRANCE — theme-aware veil, header drop, hero sequence
    -------------------------------------------------------------------------- */
 .page-veil {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--color-warm-white);
+  background: var(--bg);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -46,40 +46,13 @@
   animation: headerDrop 700ms var(--ease-luxe) 60ms backwards;
 }
 
-.js .site-header .brand-logo,
-.js .primary-nav {
-  animation: none;
-}
-
 @keyframes headerDrop {
   from { opacity: 0; transform: translateY(-12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* The hero media is a CSS-generated editorial texture, not an <img>.
-   The clip-path wipe lives on .hero-media; the slow settle lives on its
-   ::before layer so the two never fight over the transform property. */
-.hero-media {
-  top: -40px;
-  bottom: -40px;
-  background: var(--color-black);
-}
-
-.hero-media::before {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(115deg, rgba(17, 17, 17, 0.92) 20%, rgba(17, 17, 17, 0.28) 70%),
-    repeating-linear-gradient(135deg, #302b29 0, #302b29 12rem, #1b1918 12rem, #1b1918 24rem);
-  content: "";
-  transform: scale(1);
-}
-
-.hero-media span {
-  position: relative;
-  z-index: 1;
-}
-
+   Clip wipe on .hero-media; slow settle on the texture layer ::before. */
 .js [data-motion-hero] .hero-media {
   animation: heroMediaClip var(--dur-cinematic) var(--ease-luxe) 120ms backwards;
 }
@@ -131,9 +104,8 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Whole-heading curtain. The teaser text is never split into spans because
-   language.js swaps copy with textContent; the heading stays one readable,
-   translatable element. */
+/* Whole-heading curtain. language.js swaps copy with textContent, so the
+   heading stays one readable, translatable element (never split into spans). */
 @keyframes heroTitleRise {
   from { opacity: 0; transform: translateY(22px); clip-path: inset(0 0 100% 0); }
   to { opacity: 1; transform: translateY(0); clip-path: inset(0); }
@@ -214,7 +186,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. SECTION CONTINUITY — burgundy hairline draw
+   5. SECTION CONTINUITY — hairline draw
    -------------------------------------------------------------------------- */
 .js .section[data-reveal="line"] {
   position: relative;
@@ -226,7 +198,7 @@
   right: 0;
   left: 0;
   height: 1px;
-  background: var(--color-primary);
+  background: var(--accent-text);
   content: "";
   transform: scaleX(0);
   transform-origin: left;
@@ -238,11 +210,11 @@
 }
 
 .js .craft[data-reveal="line"]::before {
-  background: rgba(250, 249, 246, 0.42);
+  background: var(--band-border);
 }
 
 .js .contact[data-reveal="line"]::before {
-  background: rgba(250, 249, 246, 0.5);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -250,69 +222,13 @@
    -------------------------------------------------------------------------- */
 .intro-photo,
 .service-image,
-.gallery-item {
+.gallery-media {
   overflow: hidden;
 }
 
-.gallery-item {
-  position: relative;
-  transition: none;
-}
-
-/* The original build lifted cards with translate + shadow; the new layer
-   keeps the card still and lets the photograph do the moving. */
-.gallery-item:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.gallery-item::after {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(17, 17, 17, 0.12);
-  content: "";
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 450ms var(--ease-luxe);
-}
-
-.gallery-item figcaption {
-  position: relative;
-  z-index: 2;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .gallery-item:hover::after {
-    opacity: 1;
-  }
-
-  .gallery-item:hover img {
-    transform: scale(1.04);
-    transition-duration: 900ms;
-  }
-
-  .gallery-item:hover figcaption {
-    transform: translateY(-10px);
-  }
-
-  .service-card:hover .service-image img {
-    transform: scale(1.04);
-    transition-duration: 900ms;
-  }
-
-  .intro-photo:hover img,
-  .js [data-reveal="mask"].is-revealed:hover img {
-    transform: scale(1.04);
-    transition-duration: 900ms;
-  }
-}
-
-.gallery-item img {
-  transition: transform 900ms var(--ease-luxe);
-}
-
-.service-image img {
+.gallery-media img,
+.service-image img,
+.intro-photo img {
   transition: transform 900ms var(--ease-luxe);
 }
 
@@ -320,26 +236,39 @@
   transition: transform 450ms var(--ease-luxe);
 }
 
-@media (hover: none) {
-  .gallery-item,
-  .gallery-item:hover {
-    transform: none;
-    box-shadow: none;
+@media (hover: hover) and (pointer: fine) {
+  .gallery-item:hover .gallery-media::after {
+    opacity: 1;
   }
 
-  .gallery-item img,
-  .gallery-item:hover img,
-  .gallery-item figcaption,
+  .gallery-item:hover .gallery-media img {
+    transform: scale(1.04);
+    transition-duration: 900ms;
+  }
+
   .gallery-item:hover figcaption {
-    transform: none;
-  }
-
-  .gallery-item::after {
-    display: none;
+    transform: translateY(-8px);
   }
 
   .service-card:hover .service-image img {
+    transform: scale(1.04);
+  }
+
+  .intro-photo:hover img,
+  .js [data-reveal="mask"].is-revealed:hover img {
+    transform: scale(1.04);
+  }
+}
+
+@media (hover: none) {
+  .gallery-item:hover .gallery-media img,
+  .gallery-item:hover figcaption,
+  .service-card:hover .service-image img {
     transform: none;
+  }
+
+  .gallery-media::after {
+    display: none;
   }
 }
 
@@ -347,11 +276,7 @@
    7. BUTTONS
    -------------------------------------------------------------------------- */
 .button {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  --button-sweep: var(--color-primary);
-  transition: transform 120ms var(--ease-luxe);
+  --button-sweep: var(--accent-hover);
 }
 
 .button::before {
@@ -370,69 +295,35 @@
   transform: translateX(0);
 }
 
-.button:hover {
-  transform: none;
-}
-
-.button:active {
-  transform: scale(0.98);
-}
-
 .button:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
 
+.contact .button:focus-visible,
+.site-footer .button:focus-visible {
+  outline-color: #faf9f6;
+}
+
 .button--light {
-  --button-sweep: var(--color-cream);
+  --button-sweep: var(--band-accent);
 }
 
 .button--hero-outline {
-  --button-sweep: var(--color-primary);
+  --button-sweep: var(--hero-text);
+}
+
+.button--whatsapp {
+  --button-sweep: #111111;
 }
 
 .button--contact-outline {
-  --button-sweep: var(--color-black);
-}
-
-/* WhatsApp keeps its existing colour behaviour; only press/focus are added. */
-.button--whatsapp {
-  --button-sweep: transparent;
-}
-
-.contact .button:focus-visible {
-  outline-color: currentColor;
-}
-
-.contact a:focus-visible,
-.site-footer a:focus-visible {
-  outline-color: var(--color-warm-white);
+  --button-sweep: #111111;
 }
 
 /* --------------------------------------------------------------------------
    8. LANGUAGE SWITCHER POLISH
    -------------------------------------------------------------------------- */
-.language-switcher button {
-  position: relative;
-}
-
-.language-switcher button::after {
-  position: absolute;
-  right: 0.35rem;
-  bottom: 0.15rem;
-  left: 0.35rem;
-  height: 1px;
-  background: var(--color-primary);
-  content: "";
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 300ms var(--ease-luxe);
-}
-
-.language-switcher button[aria-pressed="true"]::after {
-  transform: scaleX(1);
-}
-
 /* Only visible translated blocks receive .lang-target from motion.js, so a
    language change never reveals below-the-fold content early. */
 .js .lang-target,
@@ -470,11 +361,11 @@
   }
 
   .site-header {
-    z-index: 40;
+    z-index: 60;
   }
 
   .brand,
-  .nav-toggle {
+  .header-tools {
     position: relative;
     z-index: 2;
   }
@@ -484,21 +375,25 @@
     inset: 0;
     z-index: 0;
     display: flex;
+    height: 100dvh;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5rem;
-    padding: calc(var(--header-height) + 2rem) 1.5rem 2rem;
+    gap: 0;
+    padding:
+      calc(var(--header-height) + 2rem + env(safe-area-inset-top))
+      var(--gutter)
+      calc(2rem + env(safe-area-inset-bottom));
     overflow-y: auto;
     overscroll-behavior: contain;
-    background: var(--color-warm-white);
+    background: var(--bg);
     clip-path: inset(0 0 100% 0);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transition:
-      clip-path 350ms var(--ease-soft),
-      opacity 350ms var(--ease-soft),
-      visibility 0s linear 350ms;
+      clip-path 280ms var(--ease-soft),
+      opacity 280ms var(--ease-soft),
+      visibility 0s linear 280ms;
   }
 
   .js .primary-nav.is-open {
@@ -511,24 +406,13 @@
       opacity 550ms var(--ease-soft);
   }
 
-  .primary-nav a {
-    display: flex;
-    min-height: 44px;
-    align-items: center;
-    padding-block: 0.6rem;
-  }
-
-  .primary-nav a::after {
-    display: none;
-  }
-
   .js .primary-nav a,
   .js .primary-nav .language-switcher {
     opacity: 0;
     transform: translateY(14px);
     transition:
-      opacity 450ms var(--ease-luxe),
-      transform 450ms var(--ease-luxe);
+      opacity 420ms var(--ease-luxe),
+      transform 420ms var(--ease-luxe);
   }
 
   .js .primary-nav.is-open a,
@@ -557,9 +441,11 @@
     transition-delay: 480ms;
   }
 
-  .language-switcher button {
-    min-width: 44px;
-    min-height: 44px;
+  /* Closing is faster and unstaggered. */
+  .js .primary-nav:not(.is-open) a,
+  .js .primary-nav:not(.is-open) .language-switcher {
+    transition-duration: 160ms;
+    transition-delay: 0ms;
   }
 
   .js [data-motion-hero] .hero-media {
@@ -636,11 +522,22 @@ body.menu-open {
     transition: none !important;
   }
 
+  .js .primary-nav {
+    transition: none !important;
+  }
+
   .nav-toggle span,
   .language-switcher button,
   .language-switcher button::after,
   .button,
-  .button::before {
+  .button::before,
+  .gallery-media::after,
+  .gallery-media img,
+  .service-image img,
+  .intro-photo img,
+  .gallery-item figcaption,
+  .service-link::after,
+  .text-link > span:last-child {
     transition: none !important;
   }
 }

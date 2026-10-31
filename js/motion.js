@@ -8,6 +8,8 @@
   const parallax = matchMedia("(min-width: 64rem) and (hover: hover) and (pointer: fine)");
   const desktop = matchMedia("(min-width: 48rem)");
   const toggle = $("[data-nav-toggle]");
+  const themeToggle = $("[data-theme-toggle]");
+  const header = $("[data-site-header]");
   const nav = $("[data-primary-nav]");
   const hero = $("[data-motion-hero]");
   const media = hero && $(".hero-media", hero);
@@ -51,6 +53,7 @@
   let ticking = false;
   const scroll = () => {
     ticking = false;
+    if (header) header.classList.toggle("is-scrolled", scrollY > 8);
     let active = "";
     secs.forEach((s) => {
       const r = s.getBoundingClientRect();
@@ -81,7 +84,7 @@
     root.classList.toggle("menu-open", on);
     document.body.classList.toggle("menu-open", on);
   };
-  const focus = () => $$("a,button", nav);
+  const focus = () => [...$$("a,button", nav), themeToggle, toggle].filter(Boolean);
   if (toggle && nav) {
     toggle.addEventListener("click", () => {
       const open = toggle.getAttribute("aria-expanded") === "true";

@@ -4,9 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="David Fabrics Store - an independent concept preview for a premium tailoring and fabrics website.">
-  <meta name="theme-color" content="#111111">
+  <meta name="theme-color" content="#FAF9F6">
+  <meta name="color-scheme" content="light dark">
   <title>David Fabrics Store | Elegance, Tailored to You</title>
   <link rel="icon" type="image/jpeg" href="assets/logo/Screenshot_20261030_234726_Instagram.jpg">
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var theme;
+      try { theme = localStorage.getItem("david-fabrics-theme"); } catch (error) { theme = null; }
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      root.setAttribute("data-theme", theme);
+      root.style.colorScheme = theme;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", theme === "dark" ? "#121110" : "#FAF9F6");
+    })();
+    document.documentElement.classList.add("js");
+    setTimeout(function () {
+      if (!window.__dfMotion) document.documentElement.classList.remove("js");
+    }, 3000);
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +34,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="css/motion.css">
-  <script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__dfMotion)document.documentElement.classList.remove("js");},3000);</script>
+  <script src="js/theme.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/language.js" defer></script>
   <script src="js/gallery.js" defer></script>
@@ -31,13 +51,10 @@
   <header class="site-header" data-site-header>
     <div class="container nav-shell">
       <a class="brand" href="#" aria-label="David Fabrics Store home">
-        <img class="brand-logo" src="assets/logo/Screenshot_20261030_234726_Instagram.jpg" alt="David Fabrics Store" width="475" height="476">
+        <span class="logo-plate logo-plate--header">
+          <img class="brand-logo" src="assets/logo/Screenshot_20261030_234726_Instagram.jpg" alt="David Fabrics Store" width="475" height="476" decoding="async">
+        </span>
       </a>
-
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-i18n-aria-label="openNavigation" aria-label="Open navigation" data-nav-toggle>
-        <span></span>
-        <span></span>
-      </button>
 
       <nav class="primary-nav" id="primary-navigation" data-i18n-aria-label="primaryNavigation" aria-label="Primary navigation" data-primary-nav>
         <a href="#about" data-i18n="navAbout">About</a>
@@ -51,6 +68,27 @@
           <button type="button" data-language="sw" aria-pressed="false">SW</button>
         </div>
       </nav>
+
+      <div class="header-tools">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark theme" data-i18n-aria-label="themeToDark">
+          <span class="theme-toggle-icon theme-toggle-icon--sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" focusable="false">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
+          </span>
+          <span class="theme-toggle-icon theme-toggle-icon--moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path>
+            </svg>
+          </span>
+        </button>
+
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-i18n-aria-label="openNavigation" aria-label="Open navigation" data-nav-toggle>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -76,7 +114,7 @@
     <section class="intro section reveal-section" id="about" aria-labelledby="intro-title" data-reveal="line">
       <div class="container intro-grid">
         <figure class="intro-photo" data-reveal="mask">
-          <img src="assets/images/Screenshot_20261030_234555_Instagram.jpg" alt="David Fabrics Store storefront at night" width="735" height="736" loading="lazy">
+          <img src="assets/images/Screenshot_20261030_234555_Instagram.jpg" alt="David Fabrics Store storefront at night" width="720" height="886" loading="lazy" decoding="async">
         </figure>
         <div class="intro-content">
           <p class="eyebrow" data-reveal="fade-up" data-i18n="introEyebrow">The House of David Fabrics</p>
@@ -99,7 +137,7 @@
 
         <div class="craft-grid service-grid">
           <article class="craft-item service-card reveal-card" data-reveal="fade-up">
-            <div class="service-image"><img src="assets/images/men_collection.jpg.png" alt="AI-generated men's burgundy suit fashion concept" width="768" height="1024" loading="lazy"></div>
+            <div class="service-image"><img src="assets/images/optimized/men_collection.jpg" alt="AI-generated men's burgundy suit fashion concept" width="1536" height="1024" loading="lazy" decoding="async"></div>
             <div class="service-card-content">
               <p class="craft-number">01</p>
               <h3 data-i18n="mensCollection">Men's Collection</h3>
@@ -109,7 +147,7 @@
             <a class="service-link" href="#contact" data-i18n="serviceEnquire">Enquire</a>
           </article>
           <article class="craft-item service-card reveal-card" data-reveal="fade-up">
-            <div class="service-image"><img src="assets/images/women_collection.jpg.png" alt="AI-generated burgundy women's evening fashion concept" width="768" height="1024" loading="lazy"></div>
+            <div class="service-image"><img src="assets/images/optimized/women_collection.jpg" alt="AI-generated burgundy women's evening fashion concept" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <div class="service-card-content">
               <p class="craft-number">02</p>
               <h3 data-i18n="womensCollection">Women's Collection</h3>
@@ -119,7 +157,7 @@
             <a class="service-link" href="#contact" data-i18n="serviceEnquire">Enquire</a>
           </article>
           <article class="craft-item service-card reveal-card" data-reveal="fade-up">
-            <div class="service-image"><img src="assets/images/wedding_collection.jpg.png" alt="AI-generated wedding couple formalwear concept" width="768" height="1024" loading="lazy"></div>
+            <div class="service-image"><img src="assets/images/optimized/wedding_collection.jpg" alt="AI-generated wedding couple formalwear concept" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <div class="service-card-content">
               <p class="craft-number">03</p>
               <h3 data-i18n="weddingCollection">Wedding Collection</h3>
@@ -129,7 +167,7 @@
             <a class="service-link" href="#contact" data-i18n="serviceEnquire">Enquire</a>
           </article>
           <article class="craft-item service-card reveal-card" data-reveal="fade-up">
-            <div class="service-image"><img src="assets/images/tailoring_craftsmanship.jpg.png" alt="AI-generated tailoring craftsmanship fashion concept" width="768" height="1024" loading="lazy"></div>
+            <div class="service-image"><img src="assets/images/optimized/tailoring_craftsmanship.jpg" alt="AI-generated tailoring craftsmanship fashion concept" width="1536" height="1024" loading="lazy" decoding="async"></div>
             <div class="service-card-content">
               <p class="craft-number">04</p>
               <h3 data-i18n="tailoringCraftsmanship">Tailoring Craftsmanship</h3>
@@ -153,24 +191,24 @@
         </div>
 
         <div class="gallery-grid" id="gallery-grid">
-          <figure class="gallery-item gallery-item--tall reveal-card" data-reveal="mask">
-            <img src="assets/images/men_collection.jpg.png" alt="AI-generated men's tailored suit fashion concept" width="768" height="1024" loading="lazy">
+          <figure class="gallery-item gallery-item--wide reveal-card" data-reveal="mask">
+            <div class="gallery-media"><img src="assets/images/optimized/men_collection.jpg" alt="AI-generated men's tailored suit fashion concept" width="1536" height="1024" loading="lazy" decoding="async"></div>
             <figcaption><span data-i18n="fashionInspiration">Fashion Inspiration</span> — <span data-i18n="mensCollection">Men's Collection</span></figcaption>
           </figure>
           <figure class="gallery-item reveal-card" data-reveal="fade-up">
-            <img src="assets/images/women_collection.jpg.png" alt="AI-generated women's burgundy evening fashion concept" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/women_collection.jpg" alt="AI-generated women's burgundy evening fashion concept" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption><span data-i18n="fashionInspiration">Fashion Inspiration</span> — <span data-i18n="womensCollection">Women's Collection</span></figcaption>
           </figure>
           <figure class="gallery-item reveal-card" data-reveal="fade-up">
-            <img src="assets/images/wedding_collection.jpg.png" alt="AI-generated wedding and groom fashion concept" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/wedding_collection.jpg" alt="AI-generated wedding and groom fashion concept" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption><span data-i18n="fashionInspiration">Fashion Inspiration</span> — <span data-i18n="weddingCollection">Wedding Collection</span></figcaption>
           </figure>
-          <figure class="gallery-item reveal-card" data-reveal="fade-up">
-            <img src="assets/images/tailoring_craftsmanship.jpg.png" alt="AI-generated bespoke tailoring craftsmanship concept" width="768" height="1024" loading="lazy">
+          <figure class="gallery-item gallery-item--wide reveal-card" data-reveal="fade-up">
+            <div class="gallery-media"><img src="assets/images/optimized/tailoring_craftsmanship.jpg" alt="AI-generated bespoke tailoring craftsmanship concept" width="1536" height="1024" loading="lazy" decoding="async"></div>
             <figcaption><span data-i18n="fashionInspiration">Fashion Inspiration</span> — <span data-i18n="tailoringCraftsmanship">Tailoring Craftsmanship</span></figcaption>
           </figure>
           <figure class="gallery-item mix-design" data-reveal="fade-up">
-            <img src="assets/images/mix-burgundy-cream.jpg.png" alt="AI-generated fashion concept with burgundy jacket and cream trousers" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/mix-burgundy-cream.jpg" alt="AI-generated fashion concept with burgundy jacket and cream trousers" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption>
               <span class="gallery-inspiration" data-i18n="fashionInspiration">Fashion Inspiration</span>
               <strong data-i18n="burgundyCream">Burgundy &amp; Cream</strong>
@@ -178,7 +216,7 @@
             </figcaption>
           </figure>
           <figure class="gallery-item mix-design" data-reveal="fade-up">
-            <img src="assets/images/mix-brown-cream.jpg.png" alt="AI-generated fashion concept with chocolate jacket and cream trousers" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/mix-brown-cream.jpg" alt="AI-generated fashion concept with chocolate jacket and cream trousers" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption>
               <span class="gallery-inspiration" data-i18n="fashionInspiration">Fashion Inspiration</span>
               <strong data-i18n="chocolateCream">Chocolate &amp; Cream</strong>
@@ -186,7 +224,7 @@
             </figcaption>
           </figure>
           <figure class="gallery-item mix-design" data-reveal="fade-up">
-            <img src="assets/images/mix-emerald-black.jpg.png" alt="AI-generated fashion concept with emerald jacket and black trousers" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/mix-emerald-black.jpg" alt="AI-generated fashion concept with emerald jacket and black trousers" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption>
               <span class="gallery-inspiration" data-i18n="fashionInspiration">Fashion Inspiration</span>
               <strong data-i18n="emeraldBlack">Emerald &amp; Black</strong>
@@ -194,7 +232,7 @@
             </figcaption>
           </figure>
           <figure class="gallery-item women-design" data-reveal="fade-up">
-            <img src="assets/images/women-burgundy.jpg.png" alt="AI-generated burgundy presidential women's suit concept" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/women-burgundy.jpg" alt="AI-generated burgundy presidential women's suit concept" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption>
               <span class="gallery-inspiration" data-i18n="fashionInspiration">Fashion Inspiration</span>
               <strong data-i18n="burgundyPresidentialSuit">Burgundy Presidential Suit</strong>
@@ -202,7 +240,7 @@
             </figcaption>
           </figure>
           <figure class="gallery-item women-design" data-reveal="fade-up">
-            <img src="assets/images/women-ivory.jpg.png" alt="AI-generated ivory executive women's suit concept" width="768" height="1024" loading="lazy">
+            <div class="gallery-media"><img src="assets/images/optimized/women-ivory.jpg" alt="AI-generated ivory executive women's suit concept" width="1024" height="1536" loading="lazy" decoding="async"></div>
             <figcaption>
               <span class="gallery-inspiration" data-i18n="fashionInspiration">Fashion Inspiration</span>
               <strong data-i18n="ivoryExecutiveSuit">Ivory Executive Suit</strong>
@@ -241,7 +279,9 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand-block">
-        <img class="footer-logo" src="assets/logo/Screenshot_20261030_234726_Instagram.jpg" alt="David Fabrics Store" width="475" height="476" loading="lazy">
+        <span class="logo-plate logo-plate--footer">
+          <img class="footer-logo" src="assets/logo/Screenshot_20261030_234726_Instagram.jpg" alt="David Fabrics Store" width="475" height="476" loading="lazy" decoding="async">
+        </span>
         <p class="footer-tagline" data-i18n="heroTitle">Elegance, Tailored to You.</p>
       </div>
       <nav class="footer-nav" data-i18n-aria-label="footerNavigation" aria-label="Footer navigation">
